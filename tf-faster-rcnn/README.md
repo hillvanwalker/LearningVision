@@ -113,4 +113,53 @@ tensorboard --logdir=tensorboard/vgg16/coco_2014_train+coco_2014_valminusminival
 # 使用tools/reval.sh重新评估
 # 默认的模型存放于 output/[NET]/[DATASET]/default/
 ```
-
+## 目录结构
+```bash
+├── data //数据目录
+│   ├── cache //训练集和测试集的proposals。
+│   ├── cache.tgz  //程序首先从这读取。集合变化了一定先delete该目录下的文件
+│   ├── coco                  //Python COCO API
+│   ├── demo                  //保存几张图片(.jpg文件)，用于演示demo
+│   ├── imagenet_weights      //存放预训练模型
+│   ├── voc_2007_trainval     //下载的训练好的文件目录
+│   ├── scripts               //一些实用脚本，用于获取数据
+│   ├── VOCdevkit             //PASCAL VOC 2007数据集开发工具箱
+│   ├── VOCdevkit2007 -> VOCdevkit   //软连接
+│   └── wget-log              //下载模型的日志文件
+================================================================
+├── experiments
+│   ├── cfgs                  //保存$NET.yml文件，针对具体网络的配置参数
+│   ├── logs                  //保存每次训练和测试的日志
+│   └── scripts               //保存三个.sh脚本，用于demo演示、测试和训练
+│       ├── convert_vgg16.sh
+│       ├── test_faster_rcnn.sh
+│       └── train_faster_rcnn.sh
+================================================================
+├── lib    //主要的程序文件
+│   ├── datasets   //读取数据的接口文件 
+│   ├── layer_utils  //与anchor proposal相关
+│   ├── Makefile
+│   ├── model   //config配置文件   nms bbox test train_val等
+│   ├── nets    //具体网络的程序文件(如mobilenet_v1，resnet_v1，vgg16)
+│   ├── nms     //c和cuda的加速代码，生成共享库(.so)
+│   ├── roi_data_layer  //RoI层
+│   ├── setup.py  //用于构建Cython模块
+│   └── utils  //一些辅助工具，计时、可视化 
+================================================================
+├── output  //保存训练模型和测试结果
+│   ├── res101
+│   └── vgg16
+└── tools  // 训练、测试、演示等程序
+=====================================================================
+output目录
+├── res101   //在faster-rcnn(res101)
+│   ├── voc_2007_test    //测试结果，按类别保存的.pkl文件
+│   │   └── default
+│   ├── voc_2007_trainval   //训练的模型保存在该文件夹下
+│   │   └── default
+│   └── voc_2007_trainval+voc_2012_trainval  //训练好的模型(软链接)
+└── vgg16
+    ├── voc_2007_test
+    ├── voc_2007_trainval
+    └── voc_2007_trainval+voc_2012_trainval
+```
