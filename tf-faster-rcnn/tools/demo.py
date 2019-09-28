@@ -95,13 +95,16 @@ def demo(sess, net, image_name):
     # from model.test import im_detect
     # def im_detect(sess, net, im): return scores, pred_boxes
     scores, boxes = im_detect(sess, net, im)
+    # scores为<class 'numpy.ndarray'>，存放了300个object proposals的得分
+    # boxes为这300个框
     timer.toc()
     print('Detection took {:.3f}s for {:d} object proposals'.format(timer.total_time, boxes.shape[0]))
 
     # Visualize detections for each class
     CONF_THRESH = 0.8  # score 阈值，最后画出候选框时需要，>thresh才会被画出
     NMS_THRESH = 0.3   # 非极大值抑制的阈值，剔除重复候选框
-    for cls_ind, cls in enumerate(CLASSES[1:]):  # 获得CLASSES中 类别的下标cls_ind和类别名cls
+    for cls_ind, cls in enumerate(CLASSES[1:]):  
+    # CLASSES为元组，其中0是背景，故从1开始，但此时的ind0对应第一个标签
         cls_ind += 1 # because we skipped background
         cls_boxes = boxes[:, 4*cls_ind:4*(cls_ind + 1)]  
         cls_scores = scores[:, cls_ind]
