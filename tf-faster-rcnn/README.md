@@ -53,6 +53,8 @@ tar xvf VOCdevkit_08-Jun-2007.tar
 cd /home/seucar/Desktop/tf-faster-rcnn/data
 ln -s $VOCdevkit VOCdevkit2007
 ```
+`~/Desktop/tf-faster-rcnn/data$ ln -s /media/seucar/Dataset/VOC/VOCdevkit VOCdevkit2007`
+
 ### 训练
 预训练模型：[GD网盘](https://drive.google.com/drive/folders/0B1_fAEgxdnvJSmF3YUlZcHFqWTQ)
 使用预训练模型的脚本：
