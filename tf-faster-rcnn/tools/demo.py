@@ -50,7 +50,7 @@ def vis_detections(im, class_name, dets, thresh=0.5):
     # np.where(condition, x, y)，满足条件(condition)，输出x，不满足输出y
     # np.where(condition)，只有条件 (condition)，没有x和y，则输出满足条件(即非0)元素的坐标
     inds = np.where(dets[:, -1] >= thresh)[0]
-    if len(inds) == 0:
+    if len(inds) == 0:  # 没有大于阈值的得分存在，则返回
         return
     # python-opencv 中读取图片默认保存为[w,h,channel](w,h顺序不确定)
     # 其中 channel：BGR 存储，而画图时，需要按RGB格式，因此此处作转换
@@ -106,14 +106,13 @@ def demo(sess, net, image_name):
     for cls_ind, cls in enumerate(CLASSES[1:]):  
     # CLASSES为元组，其中0是背景，故从1开始，但此时的ind0对应第一个标签
         cls_ind += 1 # because we skipped background
-        cls_boxes = boxes[:, 4*cls_ind:4*(cls_ind + 1)]  
-        cls_scores = scores[:, cls_ind]
-        dets = np.hstack((cls_boxes,
-                          cls_scores[:, np.newaxis])).astype(np.float32)
-                        # 将bbox,score 一起存入dets
+        cls_boxes = boxes[:, 4*cls_ind:4*(cls_ind + 1)]  # 300个框，4个坐标
+        cls_scores = scores[:, cls_ind]                  # 300个分数
+        # 将分数和框合并到一起成为一个新的(300, 5)矩阵, np.hstack():在水平方向上平铺
+        dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])).astype(np.float32)
         keep = nms(dets, NMS_THRESH)  # 进行非极大值抑制，得到抑制后的 dets
-        dets = dets[keep, :]
-        vis_detections(im, cls, dets, thresh=CONF_THRESH)
+        dets = dets[keep, :]          # keep 为留下的索引
+        vis_detections(im, cls, dets, thresh=CONF_THRESH)  # 从索引1开始到~每个 cls 存在的 dets 进行显示
 
 def parse_args():  # 解析命令行参数
     """Parse input arguments."""
