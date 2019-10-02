@@ -34,7 +34,7 @@ if __name__ == '__main__':
     demo(sess, net, im_name)
 ```
 ## trainval_net.py
-用于训练的程序
+用于加载训练参数、训练数据的程序，后续为`~/lib/model/train_val.py`
 ```bash
 usage: trainval_net.py [-h] [--cfg CFG_FILE] [--weight WEIGHT]
                        [--imdb IMDB_NAME] [--imdbval IMDBVAL_NAME]
@@ -59,18 +59,30 @@ optional arguments:
 def parse_args():
     # 获取命令行参数
 def combined_roidb(imdb_names):
-    # 结合几个数据集
+    # 结合几个数据集的函数
     def get_roidb(imdb_name):
         # 来自~/lib/datasets/factory.py，读取数据的接口
         imdb = get_imdb(imdb_name)
         # 来自~/lib/model/train_val.py的接口
         roidb = get_training_roidb(imdb)
         return roidb
+
+if __name__ == '__main__':
+  args = parse_args()  # 获取参数
+  imdb, roidb = combined_roidb(args.imdb_name) # 加载训练数据
+  # 设置输出目录
+  _, valroidb = combined_roidb(args.imdbval_name)# 加载测试数据
+  # 是否翻转
+  #构建网络
+  train_net(net,imdb,roidb,valroidb,
+            output_dir,tb_dir,
+            pretrained_model=args.weight,
+            max_iters=args.max_iters)
     
 
 ```
 程序输出：
-```
+```bash
 Called with args:
 Namespace(cfg_file=None, imdb_name='voc_2007_trainval', imdbval_name='voc_2007_test', max_iters=70000, net='vgg16', set_cfgs=None, tag=None, weight='/home/seucar/Desktop/tf-faster-rcnn/data/imagenet_weights/vgg16.ckpt')
 Using config:
