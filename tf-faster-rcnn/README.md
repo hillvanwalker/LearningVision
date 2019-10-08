@@ -25,7 +25,7 @@ Note：
 ### 安装
 ```bash
 # 前提
-pip install cython opencv-python easydic
+pip install cython opencv-python easydict
 cd /home/seucar/Desktop/tf-faster-rcnn
 source ~/anaconda3/bin/activate faster-rcnn
 cd tf-faster-rcnn/lib
@@ -58,6 +58,7 @@ ln -s $VOCdevkit VOCdevkit2007
 ### 训练
 预训练模型：[GD网盘](https://drive.google.com/drive/folders/0B1_fAEgxdnvJSmF3YUlZcHFqWTQ)
 使用预训练模型的脚本：
+将GD网盘下载的压缩包，解压到data目录下
 ```bash
 #!/bin/bash
 NET=vgg16
